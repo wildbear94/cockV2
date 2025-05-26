@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.PollItemMapper">
+    <resultMap id="pollItemResultMap" type="com.yeoni.cock.domain.entity.PollItem">
+        <id property="itemId" column="item_id"/>
+        <result property="pollId" column="poll_id"/>
+        <result property="itemDescription" column="item_description"/>
+        <result property="itemOrder" column="item_order"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="findByPollId" resultMap="pollItemResultMap">
+        SELECT *
+        FROM tb_poll_item
+        WHERE poll_id = #{pollId}
+        ORDER BY item_order ASC
+    </select>
+
+    <select id="findById" resultMap="pollItemResultMap">
+        SELECT *
+        FROM tb_poll_item
+        WHERE item_id = #{itemId}
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.PollItem" useGeneratedKeys="true" keyProperty="itemId">
+        INSERT INTO tb_poll_item (
+            poll_id, item_description, item_order
+        ) VALUES (
+            #{item.pollId}, #{item.itemDescription}, #{item.itemOrder}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.yeoni.cock.domain.entity.PollItem">
+        UPDATE tb_poll_item
+        SET item_description = #{item.itemDescription},
+            item_order = #{item.itemOrder},
+            updated_at = NOW()
+        WHERE item_id = #{item.itemId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tb_poll_item
+        WHERE item_id = #{itemId}
+    </delete>
+</mapper> 

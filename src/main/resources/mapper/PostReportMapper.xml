@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.PostReportMapper">
+
+    <insert id="insertReport">
+        INSERT INTO tb_post_report (post_id, reporter_id, reason, reported_at)
+        VALUES (#{postId}, #{reporterId}, #{reason}, NOW())
+    </insert>
+
+    <select id="selectAllReports" resultType="com.yeoni.cock.domain.entity.PostReport">
+        SELECT report_id, post_id, reporter_id, reason, reported_at
+        FROM tb_post_report
+    </select>
+
+    <select id="selectReportById" resultType="com.yeoni.cock.domain.entity.PostReport">
+        SELECT report_id, post_id, reporter_id, reason, reported_at
+        FROM tb_post_report
+        WHERE report_id = #{reportId}
+    </select>
+
+    <update id="updateReportReason">
+        UPDATE tb_post_report
+        SET reason = #{reason}
+        WHERE report_id = #{reportId}
+    </update>
+
+    <delete id="deleteReport">
+        DELETE FROM tb_post_report
+        WHERE report_id = #{reportId}
+    </delete>
+
+    <select id="existsByPostIdAndReporterId" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1 FROM tb_post_report
+            WHERE post_id = #{postId} AND reporter_id = #{reporterId}
+        )
+    </select>
+
+</mapper> 

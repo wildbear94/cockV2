@@ -1,0 +1,73 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.FileMapper">
+
+    <insert id="insertFileGroup" useGeneratedKeys="true" keyProperty="fileGroupId">
+        INSERT INTO tb_file_group(owner_type, owner_id, total_files)
+        VALUES (#{ownerType}, #{ownerId}, #{totalFiles})
+    </insert>
+
+    <update id="updateFileGroupTotal">
+        UPDATE tb_file_group
+        SET total_files = total_files + #{delta}
+        WHERE file_group_id = #{groupId}
+    </update>
+
+    <insert id="insertFile" useGeneratedKeys="true" keyProperty="fileId">
+        INSERT INTO tb_file(
+            file_group_id, original_filename, stored_filename,
+            file_extension, file_category, file_size,
+            storage_path, thumbnail_path, upload_order, created_by
+        ) VALUES (
+             #{fileGroupId}, #{originalFilename}, #{storedFilename},
+             #{fileExtension}, #{fileCategory}, #{fileSize},
+             #{storagePath}, #{thumbnailPath}, #{uploadOrder}, #{created_by}
+         )
+    </insert>
+
+    <select id="selectFileById" resultType="com.yeoni.cock.domain.entity.FileInfo">
+        SELECT * FROM tb_file WHERE file_id = #{fileId}
+    </select>
+
+    <update id="incrementDownloadCount">
+        UPDATE tb_file SET download_count = download_count + 1 WHERE file_id = #{fileId}
+    </update>
+
+    <update id="updateFileInfo">
+        UPDATE tb_file
+        <set>
+            <if test="info.originalFilename != null">
+                original_filename = #{info.originalFilename},
+            </if>
+            <if test="info.fileCategory != null">
+                file_category = #{info.fileCategory},
+            </if>
+            <if test="info.uploadOrder != null">
+                upload_order = #{info.uploadOrder},
+            </if>
+            <if test="info.thumbnailPath != null">
+                thumbnail_path = #{info.thumbnailPath},
+            </if>
+            <if test="info.isProcessed != null">
+                is_processed = #{info.isProcessed},
+            </if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        WHERE file_id = #{fileId}
+    </update>
+
+    <delete id="deleteFileById">
+        DELETE FROM tb_file
+        WHERE file_id = #{fileId}
+    </delete>
+
+    <select id="selectFilesByGroupId" resultType="com.yeoni.cock.domain.entity.FileInfo">
+        SELECT * FROM tb_file WHERE file_group_id = #{groupId}
+    </select>
+
+    <delete id="deleteFileGroupById">
+        DELETE FROM tb_file_group WHERE file_group_id = #{groupId}
+    </delete>
+
+</mapper>

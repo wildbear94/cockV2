@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.CommentMapper">
+    <resultMap id="commentResultMap" type="com.yeoni.cock.domain.entity.Comment">
+        <id property="commentId" column="comment_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="clubId" column="club_id"/>
+        <result property="content" column="content"/>
+        <result property="authorId" column="author_id"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="isSecret" column="is_secret"/>
+        <result property="status" column="status"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByPostId" resultMap="commentResultMap">
+        SELECT *
+        FROM tb_comment
+        WHERE post_id = #{postId}
+        AND is_deleted = 0
+        ORDER BY parent_id NULLS FIRST, comment_id ASC
+    </select>
+
+    <select id="findById" resultMap="commentResultMap">
+        SELECT *
+        FROM tb_comment
+        WHERE comment_id = #{commentId}
+        AND is_deleted = 0
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.Comment" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO tb_comment (
+            post_id, parent_id, club_id, content, author_id,
+            is_secret, status
+        ) VALUES (
+            #{comment.postId}, #{comment.parentId}, #{comment.clubId},
+            #{comment.content}, #{comment.authorId}, #{comment.isSecret},
+            #{comment.status}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.yeoni.cock.domain.entity.Comment">
+        UPDATE tb_comment
+        SET content = #{comment.content},
+            is_secret = #{comment.isSecret},
+            status = #{comment.status}
+        WHERE comment_id = #{comment.commentId}
+        AND is_deleted = 0
+    </update>
+
+    <update id="delete">
+        UPDATE tb_comment
+        SET is_deleted = 1
+        WHERE comment_id = #{commentId}
+        AND is_deleted = 0
+    </update>
+</mapper> 

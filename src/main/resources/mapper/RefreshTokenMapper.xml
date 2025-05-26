@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.RefreshTokenMapper">
+    <resultMap id="refreshTokenResultMap" type="com.yeoni.cock.domain.entity.RefreshToken">
+        <id property="tokenId" column="token_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="token" column="token"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="expiresAt" column="expires_at"/>
+        <result property="isRevoked" column="is_revoked"/>
+    </resultMap>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.RefreshToken">
+        INSERT INTO tb_refresh_token (
+            token_id, user_id, token, created_at, expires_at, is_revoked
+        ) VALUES (
+            #{refreshToken.tokenId}, #{refreshToken.userId}, #{refreshToken.token},
+            #{refreshToken.createdAt}, #{refreshToken.expiresAt}, #{refreshToken.isRevoked}
+        )
+    </insert>
+
+    <select id="findByToken" resultMap="refreshTokenResultMap">
+        SELECT * FROM tb_refresh_token WHERE token = #{token} AND is_revoked = 0
+    </select>
+
+    <select id="findByUserId" resultMap="refreshTokenResultMap">
+        SELECT * FROM tb_refresh_token WHERE user_id = #{userId} AND is_revoked = 0
+    </select>
+
+    <update id="revoke">
+        UPDATE tb_refresh_token SET is_revoked = 1 WHERE token_id = #{tokenId}
+    </update>
+
+    <delete id="deleteByUserId">
+        DELETE FROM tb_refresh_token WHERE user_id = #{userId}
+    </delete>
+</mapper> 

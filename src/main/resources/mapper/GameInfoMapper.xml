@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.GameInfoMapper">
+    <resultMap id="gameInfoResultMap" type="com.yeoni.cock.domain.entity.GameInfo">
+        <id property="seq" column="seq"/>
+        <result property="userId" column="user_id"/>
+        <result property="gameName" column="game_name"/>
+        <result property="gameScene" column="game_scene"/>
+        <result property="gameArea" column="game_area"/>
+        <result property="gameAddrDoro" column="game_addr_doro"/>
+        <result property="gameAddrJibun" column="game_addr_jibun"/>
+        <result property="gameAddrEtc" column="game_addr_etc"/>
+        <result property="gameStDt" column="game_st_dt"/>
+        <result property="gameEdDt" column="game_ed_dt"/>
+        <result property="gameReceiptStDt" column="game_receipt_st_dt"/>
+        <result property="gameReceiptEdDt" column="game_receipt_ed_dt"/>
+        <result property="gameReceiptNum" column="game_receipt_num"/>
+        <result property="atchFileId" column="atch_file_id"/>
+        <result property="gameContent" column="game_content"/>
+        <result property="regDt" column="reg_dt"/>
+        <result property="updDt" column="upd_dt"/>
+        <result property="sponetId" column="sponet_id"/>
+        <result property="imgSrc" column="img_src"/>
+        <result property="gameStat" column="game_stat"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="gameInfoResultMap">
+        SELECT *
+        FROM tb_game_info
+        ORDER BY reg_dt DESC
+    </select>
+
+    <select id="findById" resultMap="gameInfoResultMap">
+        SELECT *
+        FROM tb_game_info
+        WHERE seq = #{seq} AND user_id = #{userId}
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.GameInfo" useGeneratedKeys="true" keyProperty="seq">
+        INSERT INTO tb_game_info (
+            user_id, game_name, game_scene, game_area, game_addr_doro,
+            game_addr_jibun, game_addr_etc, game_st_dt, game_ed_dt,
+            game_receipt_st_dt, game_receipt_ed_dt, game_receipt_num,
+            atch_file_id, game_content, sponet_id, img_src, game_stat
+        ) VALUES (
+            #{gameInfo.userId}, #{gameInfo.gameName}, #{gameInfo.gameScene},
+            #{gameInfo.gameArea}, #{gameInfo.gameAddrDoro}, #{gameInfo.gameAddrJibun},
+            #{gameInfo.gameAddrEtc}, #{gameInfo.gameStDt}, #{gameInfo.gameEdDt},
+            #{gameInfo.gameReceiptStDt}, #{gameInfo.gameReceiptEdDt}, #{gameInfo.gameReceiptNum},
+            #{gameInfo.atchFileId}, #{gameInfo.gameContent}, #{gameInfo.sponetId},
+            #{gameInfo.imgSrc}, #{gameInfo.gameStat}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE tb_game_info
+        SET game_name = #{gameInfo.gameName},
+            game_scene = #{gameInfo.gameScene},
+            game_area = #{gameInfo.gameArea},
+            game_addr_doro = #{gameInfo.gameAddrDoro},
+            game_addr_jibun = #{gameInfo.gameAddrJibun},
+            game_addr_etc = #{gameInfo.gameAddrEtc},
+            game_st_dt = #{gameInfo.gameStDt},
+            game_ed_dt = #{gameInfo.gameEdDt},
+            game_receipt_st_dt = #{gameInfo.gameReceiptStDt},
+            game_receipt_ed_dt = #{gameInfo.gameReceiptEdDt},
+            game_receipt_num = #{gameInfo.gameReceiptNum},
+            atch_file_id = #{gameInfo.atchFileId},
+            game_content = #{gameInfo.gameContent},
+            sponet_id = #{gameInfo.sponetId},
+            img_src = #{gameInfo.imgSrc},
+            game_stat = #{gameInfo.gameStat},
+            upd_dt = CURRENT_TIMESTAMP
+        WHERE seq = #{gameInfo.seq} AND user_id = #{gameInfo.userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tb_game_info
+        WHERE seq = #{seq} AND user_id = #{userId}
+    </delete>
+</mapper> 

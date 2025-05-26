@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.MarketMapper">
+    <resultMap id="marketResultMap" type="com.yeoni.cock.domain.entity.Market">
+        <id property="marketId" column="market_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="marketNm" column="market_nm"/>
+        <result property="mainPhoto" column="main_photo"/>
+        <result property="marketNum" column="market_num"/>
+        <result property="marketAddrDoro" column="market_addr_doro"/>
+        <result property="marketAddrJibun" column="market_addr_jibun"/>
+        <result property="marketAddrEtc" column="market_addr_etc"/>
+        <result property="marketUrl" column="market_url"/>
+        <result property="subPhoto" column="sub_photo"/>
+        <result property="marketText" column="market_text"/>
+        <result property="prYn" column="pr_yn"/>
+        <result property="delYn" column="del_yn"/>
+        <result property="regDt" column="reg_dt"/>
+        <result property="updDt" column="upd_dt"/>
+        <result property="entDt" column="ent_dt"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="marketResultMap">
+        SELECT *
+        FROM tb_market
+        WHERE del_yn = 'n'
+        AND ent_dt >= CURRENT_DATE
+        ORDER BY reg_dt DESC
+    </select>
+
+    <select id="findById" resultMap="marketResultMap">
+        SELECT *
+        FROM tb_market
+        WHERE market_id = #{marketId} AND user_id = #{userId} AND del_yn = 'n'
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.Market" useGeneratedKeys="true" keyProperty="marketId">
+        INSERT INTO tb_market (
+            user_id, market_nm, main_photo, market_num, market_addr_doro,
+            market_addr_jibun, market_addr_etc, market_url, sub_photo,
+            market_text, pr_yn, del_yn, reg_dt, ent_dt
+        ) VALUES (
+            #{market.userId}, #{market.marketNm}, #{market.mainPhoto},
+            #{market.marketNum}, #{market.marketAddrDoro}, #{market.marketAddrJibun},
+            #{market.marketAddrEtc}, #{market.marketUrl}, #{market.subPhoto},
+            #{market.marketText}, #{market.prYn}, #{market.delYn}, #{market.regDt}, #{market.entDt}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE tb_market
+        SET market_nm = #{market.marketNm},
+            main_photo = #{market.mainPhoto},
+            market_num = #{market.marketNum},
+            market_addr_doro = #{market.marketAddrDoro},
+            market_addr_jibun = #{market.marketAddrJibun},
+            market_addr_etc = #{market.marketAddrEtc},
+            market_url = #{market.marketUrl},
+            sub_photo = #{market.subPhoto},
+            market_text = #{market.marketText},
+            pr_yn = #{market.prYn},
+            ent_dt = #{market.entDt},
+            upd_dt = #{market.updDt}
+        WHERE market_id = #{market.marketId} AND user_id = #{market.userId} AND del_yn = 'n'
+    </update>
+
+    <update id="delete">
+        UPDATE tb_market
+        SET del_yn = 'y',
+            upd_dt = CURRENT_TIMESTAMP
+        WHERE market_id = #{marketId} AND user_id = #{userId} AND del_yn = 'n'
+    </update>
+
+    <select id="findPromotedMarkets" resultMap="marketResultMap">
+        SELECT *
+        FROM tb_market
+        WHERE del_yn = 'n'
+        AND pr_yn = 'y'
+        AND ent_dt >= CURRENT_DATE
+        ORDER BY reg_dt DESC
+    </select>
+
+    <select id="findExpiredMarkets" resultMap="marketResultMap">
+        SELECT *
+        FROM tb_market
+        WHERE del_yn = 'n'
+        AND ent_dt <![CDATA[<]]>#{today}
+        ORDER BY ent_dt DESC
+    </select>
+</mapper> 

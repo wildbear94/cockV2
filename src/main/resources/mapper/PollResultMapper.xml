@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.PollResultMapper">
+    <resultMap id="pollResultResultMap" type="com.yeoni.cock.domain.entity.PollResult">
+        <id property="resultId" column="result_id"/>
+        <result property="pollId" column="poll_id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="votedAt" column="voted_at"/>
+    </resultMap>
+
+    <select id="findByPollId" resultMap="pollResultResultMap">
+        SELECT r.*, i.item_description, i.item_order
+        FROM tb_poll_result r
+        JOIN tb_poll_item i ON r.item_id = i.item_id
+        WHERE r.poll_id = #{pollId}
+        ORDER BY i.item_order ASC, r.voted_at DESC
+    </select>
+
+    <select id="findByUserId" resultMap="pollResultResultMap">
+        SELECT r.*, i.item_description, i.item_order
+        FROM tb_poll_result r
+        JOIN tb_poll_item i ON r.item_id = i.item_id
+        WHERE r.poll_id = #{pollId} AND r.user_id = #{userId}
+        ORDER BY i.item_order ASC, r.voted_at DESC
+    </select>
+
+    <select id="findById" resultMap="pollResultResultMap">
+        SELECT r.*, i.item_description, i.item_order
+        FROM tb_poll_result r
+        JOIN tb_poll_item i ON r.item_id = i.item_id
+        WHERE r.result_id = #{resultId}
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.PollResult" useGeneratedKeys="true" keyProperty="resultId">
+        INSERT INTO tb_poll_result (
+            poll_id, item_id, user_id
+        ) VALUES (
+            #{result.pollId}, #{result.itemId}, #{result.userId}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM tb_poll_result
+        WHERE result_id = #{resultId}
+    </delete>
+
+    <delete id="deleteByPollIdAndUserId">
+        DELETE FROM tb_poll_result
+        WHERE poll_id = #{pollId} AND user_id = #{userId}
+    </delete>
+
+    <select id="countByPollIdAndItemId" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_poll_result
+        WHERE poll_id = #{pollId} AND item_id = #{itemId}
+    </select>
+</mapper> 

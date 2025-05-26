@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.MatchMapper">
+
+    <!-- 목록: del_yn = 'N' -->
+    <select id="selectAll" resultType="com.yeoni.cock.domain.entity.Match">
+        SELECT *
+        FROM cockV2.tb_match
+        WHERE del_yn = 'N'
+        ORDER BY match_sdt DESC
+    </select>
+
+    <!-- 단건 조회 -->
+    <select id="selectById" parameterType="int" resultType="com.yeoni.cock.domain.entity.Match">
+        SELECT *
+        FROM cockV2.tb_match
+        WHERE match_key = #{matchKey}
+          AND del_yn = 'N'
+    </select>
+
+    <!-- 등록 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="matchKey" parameterType="com.yeoni.cock.domain.entity.Match">
+        INSERT INTO cockV2.tb_match (
+            club_id, user_id,
+            match_sdt, match_edt,
+            player_nm_1, player_nm_2,
+            team1_score, team1_result,
+            player_nm_3, player_nm_4,
+            team2_score, team2_result,
+            match_stat, del_yn
+        ) VALUES (
+                     #{clubId}, #{userId},
+                     #{matchSdt}, #{matchEdt},
+                     #{playerNm1}, #{playerNm2},
+                     #{team1Score}, #{team1Result},
+                     #{playerNm3}, #{playerNm4},
+                     #{team2Score}, #{team2Result},
+                     #{matchStat}, 'N'
+                 )
+    </insert>
+
+    <!-- 수정 -->
+    <update id="update" parameterType="com.yeoni.cock.domain.entity.Match">
+        UPDATE cockV2.tb_match
+        <set>
+            <if test="clubId != null">club_id = #{clubId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="matchSdt != null">match_sdt = #{matchSdt},</if>
+            <if test="matchEdt != null">match_edt = #{matchEdt},</if>
+            <if test="playerNm1 != null">player_nm_1 = #{playerNm1},</if>
+            <if test="playerNm2 != null">player_nm_2 = #{playerNm2},</if>
+            <if test="team1Score != null">team1_score = #{team1Score},</if>
+            <if test="team1Result != null">team1_result = #{team1Result},</if>
+            <if test="playerNm3 != null">player_nm_3 = #{playerNm3},</if>
+            <if test="playerNm4 != null">player_nm_4 = #{playerNm4},</if>
+            <if test="team2Score != null">team2_score = #{team2Score},</if>
+            <if test="team2Result != null">team2_result = #{team2Result},</if>
+            <if test="matchStat != null">match_stat = #{matchStat},</if>
+        </set>
+        WHERE match_key = #{matchKey}
+        AND del_yn = 'N'
+    </update>
+
+    <!-- 소프트 삭제 -->
+    <update id="softDelete" parameterType="int">
+        UPDATE cockV2.tb_match
+        SET del_yn = 'Y'
+        WHERE match_key = #{matchKey}
+    </update>
+</mapper>

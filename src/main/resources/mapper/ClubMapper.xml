@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.ClubMapper">
+    <resultMap id="clubResultMap" type="com.yeoni.cock.domain.entity.Club">
+        <id property="clubId" column="club_id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="address" column="address"/>
+        <result property="addressDetail" column="address_detail"/>
+        <result property="isActive" column="is_active"/>
+        <result property="introduction" column="introduction"/>
+        <result property="inquiryContact" column="inquiry_contact"/>
+        <result property="inquiryPhone" column="inquiry_phone"/>
+        <result property="isPromoted" column="is_promoted"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="currentMembers" column="current_members"/>
+        <result property="isPublic" column="is_public"/>
+        <result property="maxMembers" column="max_members"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="clubResultMap">
+        SELECT *
+        FROM tb_club
+        WHERE is_deleted = 0
+        ORDER BY created_at DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_club
+        WHERE is_deleted = 0
+    </select>
+
+    <select id="findById" resultMap="clubResultMap">
+        SELECT *
+        FROM tb_club
+        WHERE club_id = #{clubId}
+        AND is_deleted = 0
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.Club" useGeneratedKeys="true" keyProperty="clubId">
+        INSERT INTO tb_club (
+            name, description, address, address_detail, is_active,
+            introduction, inquiry_contact, inquiry_phone, is_promoted,
+            created_by, is_public, max_members, current_members
+        ) VALUES (
+            #{club.name}, #{club.description}, #{club.address}, #{club.addressDetail},
+            #{club.isActive}, #{club.introduction}, #{club.inquiryContact},
+            #{club.inquiryPhone}, #{club.isPromoted}, #{club.createdBy},
+            #{club.isPublic}, #{club.maxMembers}, 0
+        )
+    </insert>
+
+    <update id="update" parameterType="com.yeoni.cock.domain.entity.Club">
+        UPDATE tb_club
+        SET name = #{club.name},
+            description = #{club.description},
+            address = #{club.address},
+            address_detail = #{club.addressDetail},
+            is_active = #{club.isActive},
+            introduction = #{club.introduction},
+            inquiry_contact = #{club.inquiryContact},
+            inquiry_phone = #{club.inquiryPhone},
+            is_promoted = #{club.isPromoted},
+            updated_by = #{club.updatedBy},
+            is_public = #{club.isPublic},
+            max_members = #{club.maxMembers}
+        WHERE club_id = #{club.clubId}
+        AND is_deleted = 0
+    </update>
+
+    <update id="delete">
+        UPDATE tb_club
+        SET is_deleted = 1
+        WHERE club_id = #{clubId}
+        AND is_deleted = 0
+    </update>
+</mapper> 

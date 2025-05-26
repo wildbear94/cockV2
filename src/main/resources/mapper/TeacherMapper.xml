@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.TeacherMapper">
+    <resultMap id="teacherResultMap" type="com.yeoni.cock.domain.entity.Teacher">
+        <id property="teacherId" column="teacher_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="mainPhoto" column="main_photo"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="lessonAddrDoro" column="lesson_addr_doro"/>
+        <result property="lessonAddrJibun" column="lesson_addr_jibun"/>
+        <result property="lessonAddrEtc" column="lesson_addr_etc"/>
+        <result property="subPhoto" column="sub_photo"/>
+        <result property="careerText" column="career_text"/>
+        <result property="localParkingYn" column="local_parking_yn"/>
+        <result property="localBathroomYn" column="local_bathroom_yn"/>
+        <result property="localShowerYn" column="local_shower_yn"/>
+        <result property="localColdHeatYn" column="local_cold_heat_yn"/>
+        <result property="localDressYn" column="local_dress_yn"/>
+        <result property="prYn" column="pr_yn"/>
+        <result property="delYn" column="del_yn"/>
+        <result property="regDt" column="reg_dt"/>
+        <result property="updDt" column="upd_dt"/>
+        <result property="entDt" column="ent_dt"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="teacherResultMap">
+        SELECT *
+        FROM tb_teacher
+        WHERE del_yn = 'n'
+        AND ent_dt >= CURRENT_DATE
+        ORDER BY reg_dt DESC
+    </select>
+
+    <select id="findById" resultMap="teacherResultMap">
+        SELECT *
+        FROM tb_teacher
+        WHERE teacher_id = #{teacherId} AND user_id = #{userId} AND del_yn = 'n'
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.Teacher" useGeneratedKeys="true" keyProperty="teacherId">
+        INSERT INTO tb_teacher (
+            user_id, main_photo, phone_number, lesson_addr_doro,
+            lesson_addr_jibun, lesson_addr_etc, sub_photo, career_text,
+            local_parking_yn, local_bathroom_yn, local_shower_yn,
+            local_cold_heat_yn, local_dress_yn, pr_yn, del_yn, reg_dt, ent_dt
+        ) VALUES (
+            #{teacher.userId}, #{teacher.mainPhoto}, #{teacher.phoneNumber},
+            #{teacher.lessonAddrDoro}, #{teacher.lessonAddrJibun}, #{teacher.lessonAddrEtc},
+            #{teacher.subPhoto}, #{teacher.careerText}, #{teacher.localParkingYn},
+            #{teacher.localBathroomYn}, #{teacher.localShowerYn}, #{teacher.localColdHeatYn},
+            #{teacher.localDressYn}, #{teacher.prYn}, #{teacher.delYn}, #{teacher.regDt}, #{teacher.entDt}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE tb_teacher
+        SET main_photo = #{teacher.mainPhoto},
+            phone_number = #{teacher.phoneNumber},
+            lesson_addr_doro = #{teacher.lessonAddrDoro},
+            lesson_addr_jibun = #{teacher.lessonAddrJibun},
+            lesson_addr_etc = #{teacher.lessonAddrEtc},
+            sub_photo = #{teacher.subPhoto},
+            career_text = #{teacher.careerText},
+            local_parking_yn = #{teacher.localParkingYn},
+            local_bathroom_yn = #{teacher.localBathroomYn},
+            local_shower_yn = #{teacher.localShowerYn},
+            local_cold_heat_yn = #{teacher.localColdHeatYn},
+            local_dress_yn = #{teacher.localDressYn},
+            pr_yn = #{teacher.prYn},
+            ent_dt = #{teacher.entDt},
+            upd_dt = #{teacher.updDt}
+        WHERE teacher_id = #{teacher.teacherId} AND user_id = #{teacher.userId} AND del_yn = 'n'
+    </update>
+
+    <update id="delete">
+        UPDATE tb_teacher
+        SET del_yn = 'y',
+            upd_dt = CURRENT_TIMESTAMP
+        WHERE teacher_id = #{teacherId} AND user_id = #{userId} AND del_yn = 'n'
+    </update>
+
+    <select id="findPromotedTeachers" resultMap="teacherResultMap">
+        SELECT *
+        FROM tb_teacher
+        WHERE del_yn = 'n'
+        AND pr_yn = 'y'
+        AND ent_dt >= CURRENT_DATE
+        ORDER BY reg_dt DESC
+    </select>
+
+    <select id="findExpiredTeachers" resultMap="teacherResultMap">
+        SELECT *
+        FROM tb_teacher
+        WHERE del_yn = 'n'
+        AND ent_dt <![CDATA[<]]> #{today}
+        ORDER BY ent_dt DESC
+    </select>
+</mapper> 

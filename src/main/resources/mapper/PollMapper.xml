@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeoni.cock.mapper.PollMapper">
+    <resultMap id="pollResultMap" type="com.yeoni.cock.domain.entity.Poll">
+        <id property="pollId" column="poll_id"/>
+        <result property="clubId" column="club_id"/>
+        <result property="pollName" column="poll_name"/>
+        <result property="pollStartDate" column="poll_start_date"/>
+        <result property="pollEndDate" column="poll_end_date"/>
+        <result property="pollType" column="poll_type"/>
+        <result property="pollDisposalFlag" column="poll_disposal_flag"/>
+        <result property="pollAutoDisposal" column="poll_auto_disposal"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedBy" column="updated_by"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="findByClubId" resultMap="pollResultMap">
+        SELECT *
+        FROM tb_poll
+        WHERE club_id = #{clubId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findById" resultMap="pollResultMap">
+        SELECT *
+        FROM tb_poll
+        WHERE poll_id = #{pollId}
+    </select>
+
+    <insert id="save" parameterType="com.yeoni.cock.domain.entity.Poll" useGeneratedKeys="true" keyProperty="pollId">
+        INSERT INTO tb_poll (
+            club_id, poll_name, poll_start_date, poll_end_date,
+            poll_type, poll_disposal_flag, poll_auto_disposal,
+            created_by
+        ) VALUES (
+            #{poll.clubId}, #{poll.pollName}, #{poll.pollStartDate},
+            #{poll.pollEndDate}, #{poll.pollType}, #{poll.pollDisposalFlag},
+            #{poll.pollAutoDisposal}, #{poll.createdBy}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.yeoni.cock.domain.entity.Poll">
+        UPDATE tb_poll
+        SET poll_name = #{poll.pollName},
+            poll_start_date = #{poll.pollStartDate},
+            poll_end_date = #{poll.pollEndDate},
+            poll_type = #{poll.pollType},
+            poll_disposal_flag = #{poll.pollDisposalFlag},
+            poll_auto_disposal = #{poll.pollAutoDisposal},
+            updated_by = #{poll.updatedBy},
+            updated_at = NOW()
+        WHERE poll_id = #{poll.pollId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tb_poll
+        WHERE poll_id = #{pollId}
+    </delete>
+</mapper> 

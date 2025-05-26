@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    #url: jdbc:mariadb://10.211.55.21:3306/cock
+    #username: p30
+    #password:  wild0235!
+    url: jdbc:mariadb://192.168.0.250:3306/cockV2
+    username: cock
+    password: yeonisoft!1
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MariaDBDialect
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
+
+file:
+  upload-dir: /home/sypark/upload/
+
+
+
+jwt:
+  secret: ThisIsASecretKeyThatIsAtLeast64BytesLongSoItWorksWithHS512Algorithm
+  access-token-validity-in-seconds: 86400
+  refresh-token-validity-in-seconds: 7776000
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.yeoni.cock.domain.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.yeoni.cock: DEBUG
+    org.springframework.security: DEBUG
