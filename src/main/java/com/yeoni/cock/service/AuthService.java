@@ -1,5 +1,7 @@
 package com.yeoni.cock.service;
 
+import com.yeoni.cock.domain.dto.file.FileInfoResponse;
+import com.yeoni.cock.domain.dto.user.UserDetailResponse;
 import com.yeoni.cock.domain.dto.user.UserSignUpRequest;
 import com.yeoni.cock.domain.dto.auth.LoginRequest;
 import com.yeoni.cock.domain.dto.auth.TokenResponse;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,6 +33,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final RefreshTokenMapper refreshTokenMapper;
+    private final UserService userService;
+    private final FileService fileService;
 
     @Transactional
     public void signUp(UserSignUpRequest request) {
@@ -89,8 +94,11 @@ public class AuthService {
             userMapper.updateAppId(request);
         }
 
+        UserDetailResponse userDetailResponse = userService.findById(request.getUserId());
 
-        return new TokenResponse(accessToken, refreshToken, "Bearer", 86400);
+        FileInfoResponse fileInfoResponse = null;
+
+        return new TokenResponse(accessToken, refreshToken, "Bearer", 86400, userDetailResponse, fileInfoResponse);
     }
 
     @Transactional
@@ -112,7 +120,7 @@ public class AuthService {
         String newAccessToken = tokenProvider.CreateToken(authentication, "access");
         String newRefreshToken = tokenProvider.CreateToken(authentication, "refresh");
 
-        return new TokenResponse(newAccessToken, newRefreshToken, "Bearer", 7776000);
+        return new TokenResponse(newAccessToken, newRefreshToken, "Bearer", 7776000, null, null);
     }
 
     @Transactional
