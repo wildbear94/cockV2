@@ -28,7 +28,7 @@ public class FileController {
 
     private final FileService fileService;
 
-    @Operation(summary = "파일 업로드", description = "파일 업로드")
+    @Operation(summary = "다중 파일 업로드", description = "다중 파일 업로드")
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse<Void>> uploadMultiple(
         @RequestParam("files") List<MultipartFile> files,
