@@ -13,4 +13,6 @@ public class PollResult {
     private Long itemId;
     private String userId;
     private LocalDateTime votedAt;
-} 
+    private String itemDescription;
+    private Integer itemOrder;
+}
