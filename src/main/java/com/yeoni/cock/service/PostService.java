@@ -22,8 +22,9 @@ public class PostService {
     private final CommentService commentService;
 
     @Transactional(readOnly = true)
-    public List<PostResponse> findByBoardId(Long boardId) {
-        List<Post> posts = postMapper.findByBoardId(boardId);
+    public List<PostResponse> findByBoardId(Long boardId, int page, int size, String keyword) {
+        int offset = (page - 1) * size;
+        List<Post> posts = postMapper.findByBoardId(boardId, offset, size, keyword);
         return posts.stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());

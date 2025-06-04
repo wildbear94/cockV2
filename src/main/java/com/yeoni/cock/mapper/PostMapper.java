@@ -9,7 +9,11 @@ import java.util.Optional;
 
 @Mapper
 public interface PostMapper {
-    List<Post> findByBoardId(@Param("boardId") Long boardId);
+    List<Post> findByBoardId(
+            @Param("boardId") Long boardId,
+            @Param("offset") int offset,
+            @Param("limit") int limit,
+            @Param("keyword") String keyword);
     Optional<Post> findById(@Param("postId") Long postId);
     void save(@Param("post") Post post);
     void update(@Param("post") Post post);

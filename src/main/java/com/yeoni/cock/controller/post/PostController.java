@@ -26,8 +26,13 @@ public class PostController {
 
     @Operation(summary = "게시글 목록", description = "게시글 목록")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PostResponse>>> findByBoardId(@PathVariable Long boardId) {
-        return ResponseEntity.ok(ApiResponse.success(postService.findByBoardId(boardId)));
+    public ResponseEntity<ApiResponse<List<PostResponse>>> findByBoardId(
+            @PathVariable Long boardId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword) {
+        return ResponseEntity.ok(
+                ApiResponse.success(postService.findByBoardId(boardId, page, size, keyword)));
     }
 
     @Operation(summary = "게시글 상세", description = "게시글 상세")
