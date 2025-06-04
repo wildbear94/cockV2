@@ -22,7 +22,7 @@ public class PostResponse {
     private String status;
     private String createdBy;
     private LocalDateTime createdAt;
-    private Long updatedBy;
+    private String updatedBy;
     private LocalDateTime updatedAt;
     private List<CommentResponse> comments;
 } 

@@ -70,7 +70,7 @@ public class PostService {
         post.setContent(request.getContent());
         post.setSecret(request.isSecret());
         post.setNotice(request.isNotice());
-        post.setUpdatedBy(Long.parseLong(userId));
+        post.setUpdatedBy(userId);
 
         postMapper.update(post);
     }

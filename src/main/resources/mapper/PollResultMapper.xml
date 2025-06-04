@@ -7,6 +7,8 @@
         <result property="itemId" column="item_id"/>
         <result property="userId" column="user_id"/>
         <result property="votedAt" column="voted_at"/>
+        <result property="itemDescription" column="item_description"/>
+        <result property="itemOrder" column="item_order"/>
     </resultMap>
 
     <select id="findByPollId" resultMap="pollResultResultMap">

@@ -106,6 +106,8 @@ public class PollResultService {
         response.setItemId(result.getItemId());
         response.setUserId(result.getUserId());
         response.setVotedAt(result.getVotedAt());
+        response.setItemDescription(result.getItemDescription());
+        response.setItemOrder(result.getItemOrder());
         return response;
     }
-} 
+}

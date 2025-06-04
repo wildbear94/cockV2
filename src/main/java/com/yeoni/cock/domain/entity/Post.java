@@ -21,6 +21,6 @@ public class Post {
     private boolean isDeleted;
     private String createdBy;
     private LocalDateTime createdAt;
-    private Long updatedBy;
+    private String updatedBy;
     private LocalDateTime updatedAt;
 } 
