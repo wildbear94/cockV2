@@ -22,12 +22,15 @@
     <select id="findByBoardId" resultMap="postResultMap">
         SELECT *
         FROM tb_post p
-        LEFT JOIN tb_post_report r
-          ON p.post_id = r.post_id AND r.reporter_id = #{post.authorId}
-        WHERE r.report_id IS NULL
+        WHERE p.board_id = #{boardId}
           AND p.is_deleted = 0
           AND p.status = 'ACTIVE'
-        ORDER BY is_notice DESC, post_id DESC
+        <if test="keyword != null and keyword != ''">
+          AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+               OR p.content LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY p.is_notice DESC, p.post_id DESC
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <select id="findById" resultMap="postResultMap">
